@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Для Любимки</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Lora:ital,wght@0,400;1,400&display=swap">
+<style>
+:root{--bg1:#ffeef2;--bg2:#f6c3d3;--ink:#4a1d33;--soft:#8a4a64;--card:rgba(255,255,255,.72);--accent:#c2365f;--seal:#b3264f;--gold:#9b6f22;--paper:#fffaf5;--shadow:rgba(120,30,70,.25);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#1b0a24;--bg2:#4b1637;--ink:#fde7ee;--soft:#e6b4c6;--card:rgba(255,255,255,.08);--accent:#ff8fb0;--seal:#d63a67;--gold:#f3d28b;--paper:#2b1330;--shadow:rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{--bg1:#1b0a24;--bg2:#4b1637;--ink:#fde7ee;--soft:#e6b4c6;--card:rgba(255,255,255,.08);--accent:#ff8fb0;--seal:#d63a67;--gold:#f3d28b;--paper:#2b1330;--shadow:rgba(0,0,0,.5)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(170deg,var(--bg1),var(--bg2)) fixed;color:var(--ink);font-family:Lora,Georgia,serif;overflow-x:hidden}
+main{max-width:480px;margin:0 auto;padding:28px 20px 48px;text-align:center;position:relative;z-index:1}
+h1{font-family:Caveat,cursive;font-weight:700;font-size:3rem;line-height:1.05;margin:8px 0 4px}
+.sub{color:var(--soft);font-style:italic;margin:0 0 20px}
+.days{display:inline-block;background:var(--card);border-radius:999px;padding:10px 20px;color:var(--soft);cursor:pointer;user-select:none;-webkit-user-select:none}
+.days b{font-family:Caveat,cursive;font-size:1.9rem;color:var(--accent);padding:0 4px}
+.env{position:relative;width:250px;height:165px;margin:40px auto 12px;border:0;background:none;padding:0;cursor:pointer;display:block}
+.env .back{position:absolute;inset:0;background:var(--accent);border-radius:6px;box-shadow:0 14px 30px var(--shadow)}
+.env .front{position:absolute;inset:0;border-radius:6px;background:var(--paper);clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);opacity:.95}
+.env .flap{position:absolute;left:0;right:0;top:0;height:60%;background:var(--paper);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .5s;filter:brightness(.96)}
+.env.open .flap{transform:rotateX(180deg)}
+.seal{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-14px 0 0 -23px;border-radius:50%;background:var(--seal);color:#fff;display:grid;place-items:center;font-size:1.3rem;box-shadow:0 3px 8px var(--shadow);transition:opacity .3s}
+.env.open .seal{opacity:0}
+.hint{font-family:Caveat,cursive;font-size:1.5rem;color:var(--soft);margin:0 0 34px}
+h2{font-family:Caveat,cursive;font-size:1.8rem;margin:0 0 12px;font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.grid button{aspect-ratio:1;border-radius:50%;border:2px solid var(--accent);background:var(--card);color:var(--ink);font:600 1rem Lora,serif;cursor:pointer;padding:0}
+.grid button.on{background:var(--seal);border-color:var(--seal);color:#fff}
+.grid button.today{box-shadow:0 0 0 4px var(--shadow)}
+.grid button.lock{opacity:.4;border-style:dashed}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg1);padding:10px 18px;border-radius:999px;font-size:.9rem;opacity:0;transition:.3s;pointer-events:none;z-index:20;max-width:90%}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.ov{position:fixed;inset:0;background:rgba(30,5,25,.6);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.ov.show{display:flex}
+.letter{background:var(--paper);color:var(--ink);border-radius:10px;max-width:420px;width:100%;padding:30px 26px 24px;text-align:left;box-shadow:0 20px 50px rgba(0,0,0,.4);animation:rise .5s ease-out;max-height:85vh;overflow-y:auto}
+@keyframes rise{from{transform:translateY(60px) scale(.9);opacity:0}to{transform:none;opacity:1}}
+.letter .n{font-family:Caveat,cursive;color:var(--accent);font-size:1.5rem}
+.letter p{font-size:1.15rem;line-height:1.65;margin:8px 0 18px}
+.letter .sig{font-family:Caveat,cursive;font-size:2rem;text-align:right;color:var(--accent);margin:0}
+.close{display:block;margin:18px auto 0;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:10px 26px;font:600 1rem Lora,serif;cursor:pointer}
+.hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.hearts span{position:absolute;bottom:-40px;color:var(--accent);opacity:.35;animation:float linear infinite}
+@keyframes float{to{transform:translateY(-115vh) rotate(25deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.hearts{display:none}.letter{animation:none}.env .flap{transition:none}}
+.play{background:var(--accent);color:#fff;border:0;border-radius:999px;padding:14px 30px;font:600 1.1rem Lora,serif;cursor:pointer;box-shadow:0 8px 20px var(--shadow)}
+.gwrap{position:relative;width:100%;max-width:440px;height:min(80vh,640px);background:linear-gradient(var(--bg1),var(--bg2));border-radius:16px;overflow:hidden}
+.gbar{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font:700 1.7rem Caveat,cursive;color:var(--ink);z-index:2;pointer-events:none}
+.gx{pointer-events:auto;background:var(--card);border:0;border-radius:50%;width:38px;height:38px;color:var(--ink);cursor:pointer;font-size:1rem}
+#gc{width:100%;height:100%;display:block;touch-action:none}
+.gwin{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;background:var(--paper);color:var(--ink);z-index:3}
+.gwin.show{display:flex}
+.gwin p{font-size:1.25rem;line-height:1.6;margin:0 0 12px}
+.gwin .big{font-family:Caveat,cursive;font-size:2.4rem;color:var(--accent);line-height:1.1}
+html,body{overscroll-behavior:none}
+.gwrap{touch-action:none}
+</style>
+</head>
+<body>
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+<main>
+  <h1>Любимка, это для тебя</h1>
+  <p class="sub">От Маси, с любовью</p>
+  <div class="days" id="days" role="button" tabindex="0">Мы вместе уже <b id="dn">…</b> дн.</div>
+
+  <button class="env" id="env" aria-label="Открыть сообщение дня">
+    <div class="back"></div><div class="front"></div><div class="flap"></div><div class="seal">♥</div>
+  </button>
+  <p class="hint" id="hint">Поймай 20 сердечек — и откроется письмо дня</p>
+
+  <h2>Все мои письма</h2>
+  <div class="grid" id="grid"></div>
+  <h2 style="margin-top:38px">Игра для тебя</h2>
+  <button class="play" id="play">Поймай сердечки ♥</button>
+</main>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-label="Сообщение">
+  <div class="letter">
+    <div class="n" id="ln"></div>
+    <p id="lt"></p>
+    <p class="sig">Твой Мася ♥</p>
+    <button class="close" id="cl">Закрыть</button>
+  </div>
+</div>
+<div class="ov" id="gm" role="dialog" aria-modal="true" aria-label="Игра">
+  <div class="gwrap">
+    <div class="gbar"><span id="gs">0 / 20</span><button class="gx" id="gx" aria-label="Закрыть игру">✕</button></div>
+    <canvas id="gc"></canvas>
+    <div class="gwin" id="gw">
+      <div class="big">Ты поймала все сердечки!</div>
+      <p>А моё ты поймала уже давно ♥</p>
+      <p>Люблю тебя, Любимка. Твой Мася.</p>
+      <button class="close" id="gr">Сыграть ещё</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var M=[
+"Доброе утро, Любимка. Ещё не успел сказать тебе ничего, а уже улыбаюсь — просто потому, что ты есть.",
+"С тобой даже самый обычный вторник становится праздником. Спасибо, что ты рядом.",
+"Ты умеешь превращать любой день в лучший. Я до сих пор не понимаю, как у тебя это получается.",
+"Если бы на каждую твою улыбку можно было загадать желание, у меня давно сбылось бы всё.",
+"Твой смех — моя любимая музыка. Слушал бы её без остановки.",
+"Я горжусь тобой. Тем, какая ты — добрая, сильная и настоящая.",
+"19 января 2023 года у меня появилась самая любимая дата. Лучшая из всех, что у меня были.",
+"Когда мне тяжело, я думаю о тебе — и становится легче. Ты мой дом, Любимка.",
+"Ты красивая. Не только снаружи, а так, что рядом с тобой становится светлее.",
+"Хочу, чтобы ты знала: что бы ни случилось, я на твоей стороне. Всегда.",
+"Мне нравится, как ты задумываешься, когда рассказываешь что-то важное. Смотрел бы на это вечно.",
+"Спасибо, что терпишь мои странности. Обещаю: они того стоят.",
+"Ты — моё любимое «а давай» и самое любимое «пойдём домой».",
+"Знаешь, что лучшее в моём дне? Момент, когда я пишу тебе или слышу твой голос.",
+"Если сегодня грустно, помни: есть человек, который бесконечно тобой дорожит.",
+"Рядом с тобой я хочу становиться лучше. Не потому что надо, а потому что хочется.",
+"Моё любимое место на свете — там, где ты рядом.",
+"Тебе не нужно быть идеальной. Мне нравишься именно ты — настоящая.",
+"Люблю наши глупые шутки, которые понятны только нам двоим.",
+"Любимка, ты — лучшее, что случилось со мной за все эти годы.",
+"Иногда ловлю себя на мысли, что просто счастлив. И каждый раз причина — ты.",
+"Пусть сегодня тебе во всём повезёт. А если нет — я рядом: обниму и куплю что-нибудь вкусное.",
+"Я не умею красиво говорить, зато умею любить. Тебя — очень.",
+"Ты — моя тихая гавань и мой самый яркий фейерверк одновременно.",
+"Спасибо за каждый день, который мы провели вместе. Хочу ещё очень-очень много таких.",
+"Кажется, я влюбляюсь в тебя заново каждый раз, когда ты смеёшься.",
+"Что бы ни ждало нас впереди, я хочу идти туда с тобой за руку.",
+"Ты — моя самая большая удача. Я знаю это и ценю каждую минуту.",
+"Ещё один день рядом с тобой — ещё один повод быть счастливым. Спасибо тебе.",
+"Любимка, я люблю тебя. Сегодня, завтра и через много лет. Здесь были мои слова на целый месяц, а на самом деле их у меня гораздо больше — и я буду говорить их тебе каждый день."
+];
+var $=function(i){return document.getElementById(i)};
+function utc(d){return Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())}
+var DAY=86400000, now=new Date(), todayU=utc(now);
+$('dn').textContent=Math.max(0,Math.round((todayU-Date.UTC(2023,0,19))/DAY));
+
+try{var tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand();if(tg.disableVerticalSwipes)tg.disableVerticalSwipes()}}catch(e){}
+
+var start=todayU, all=false, played=0, mode='free';
+try{
+  var s=localStorage.getItem('dasha_start');
+  if(s){start=parseInt(s,10)||todayU}else{localStorage.setItem('dasha_start',String(todayU))}
+  all=localStorage.getItem('dasha_all')==='1';
+  played=parseInt(localStorage.getItem('dasha_played')||'0',10)||0;
+}catch(e){}
+var cur=Math.min(30,Math.max(0,Math.round((todayU-start)/DAY))+1);
+var unlocked=all?30:cur;
+
+var g=$('grid');
+for(var i=1;i<=30;i++){
+  var b=document.createElement('button');
+  b.textContent=i;
+  b.className=i<=unlocked?(i===cur&&!all?'on today':'on'):'lock';
+  b.setAttribute('aria-label','Письмо '+i+(i<=unlocked?'':', пока закрыто'));
+  b.onclick=(function(n){return function(){
+    if(n<=unlocked){if(n===cur&&cur>played){startG('letter')}else{openLetter(n)}}
+    else{toast('Это письмо откроется через '+(n-unlocked)+' '+plural(n-unlocked)+' ♥')}
+  }})(i);
+  g.appendChild(b);
+}
+function plural(n){var a=n%10,b=n%100;return (a==1&&b!=11)?'день':(a>=2&&a<=4&&(b<12||b>14))?'дня':'дней'}
+function openLetter(n){$('ln').textContent='Письмо № '+n;$('lt').textContent=M[n-1];$('ov').classList.add('show');$('cl').focus()}
+$('cl').onclick=function(){$('ov').classList.remove('show');$('env').classList.remove('open')};
+$('ov').onclick=function(e){if(e.target===$('ov'))$('cl').click()};
+document.addEventListener('keydown',function(e){if(e.key==='Escape')$('cl').click()});
+$('env').onclick=function(){
+  if(cur<=played){var e=$('env');e.classList.add('open');setTimeout(function(){openLetter(cur)},450)}
+  else{startG('letter')}
+};
+$('hint').textContent=cur<=played?'Сегодняшнее письмо уже открыто ♥':'Поймай 20 сердечек — и откроется письмо дня';
+
+var taps=0,tt;
+function tapDays(){taps++;clearTimeout(tt);tt=setTimeout(function(){taps=0},1500);
+  if(taps>=5){taps=0;try{localStorage.setItem('dasha_all','1')}catch(e){}
+    toast('Режим просмотра: все письма открыты');unlocked=30;
+    var bs=g.children;for(var i=0;i<bs.length;i++){bs[i].className='on'}}}
+$('days').onclick=tapDays;
+$('days').onkeydown=function(e){if(e.key==='Enter')tapDays()};
+
+var tm;function toast(t){var x=$('toast');x.textContent=t;x.classList.add('show');clearTimeout(tm);tm=setTimeout(function(){x.classList.remove('show')},2400)}
+
+var gm=$('gm'),gc=$('gc'),cx=gc.getContext('2d'),hs=[],score=0,run=false,W=0,H=0,raf=0,last=0,spawn=0,GOAL=20;
+function gsize(){var r=gc.getBoundingClientRect(),d=window.devicePixelRatio||1;W=r.width;H=r.height;gc.width=W*d;gc.height=H*d;cx.setTransform(d,0,0,d,0,0)}
+function startG(m){mode=(m==='letter')?'letter':'free';gm.classList.add('show');$('gw').classList.remove('show');gsize();hs=[];score=0;$('gs').textContent='0 / '+GOAL;run=true;last=performance.now();spawn=0;cancelAnimationFrame(raf);raf=requestAnimationFrame(gloop)}
+function stopG(){run=false;cancelAnimationFrame(raf);gm.classList.remove('show')}
+function gloop(t){
+  if(!run)return;
+  var dt=Math.min(.05,(t-last)/1000),i;last=t;spawn-=dt;
+  if(spawn<=0){hs.push({x:34+Math.random()*(W-68),y:-30,s:24+Math.random()*14,v:90+Math.random()*70+score*4,p:Math.random()*6});spawn=.5+Math.random()*.4}
+  cx.clearRect(0,0,W,H);
+  cx.fillStyle=(getComputedStyle(document.documentElement).getPropertyValue('--accent')||'#c2365f').trim();
+  cx.textAlign='center';cx.textBaseline='middle';
+  for(i=hs.length-1;i>=0;i--){
+    var q=hs[i];q.y+=q.v*dt;q.x+=Math.sin(q.y/40+q.p)*.6;
+    if(q.y>H+40){hs.splice(i,1);continue}
+    cx.font=Math.round(q.s*2)+'px serif';cx.fillText('♥',q.x,q.y);
+  }
+  raf=requestAnimationFrame(gloop);
+}
+gc.addEventListener('pointerdown',function(e){
+  if(!run)return;
+  var r=gc.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  for(var i=hs.length-1;i>=0;i--){
+    var q=hs[i];
+    if(Math.hypot(q.x-x,q.y-y)<q.s+16){
+      hs.splice(i,1);score++;$('gs').textContent=score+' / '+GOAL;
+      if(score>=GOAL){run=false;cancelAnimationFrame(raf);$('gr').textContent=mode==='letter'?'Открыть письмо ♥':'Сыграть ещё';$('gw').classList.add('show')}
+      break;
+    }
+  }
+});
+$('play').onclick=function(){startG('free')};$('gx').onclick=stopG;
+$('gr').onclick=function(){
+  if(mode!=='letter'){startG('free');return}
+  stopG();played=cur;
+  try{localStorage.setItem('dasha_played',String(cur))}catch(e){}
+  $('hint').textContent='Сегодняшнее письмо уже открыто ♥';
+  $('env').classList.add('open');setTimeout(function(){openLetter(cur)},450);
+};
+gm.onclick=function(e){if(e.target===gm)stopG()};
+document.addEventListener('keydown',function(e){if(e.key==='Escape')stopG()});
+window.addEventListener('resize',function(){if(run)gsize()});
+
+var h=$('hearts');
+for(var k=0;k<14;k++){var sp=document.createElement('span');sp.textContent='♥';
+  sp.style.left=(Math.random()*100)+'%';sp.style.fontSize=(12+Math.random()*20)+'px';
+  sp.style.animationDuration=(10+Math.random()*12)+'s';sp.style.animationDelay=(-Math.random()*20)+'s';h.appendChild(sp)}
+</script>
+</body>
+</html>
